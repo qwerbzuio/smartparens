@@ -7763,10 +7763,10 @@ Examples:
             (delete-char (- :cl-l)))
           (sp-get encp (insert :cl))
           (sp-get enc (goto-char :beg-prf))
-          (sp-get encp (insert :prefix :op))
+          (sp-get encp (insert (or :prefix "") :op))
           (sp-get enc (delete-char (+ :op-l :prefix-l)))
           (sp-get encp (goto-char :beg-prf))
-          (sp-get enc (insert :prefix :op))
+          (sp-get enc (insert (or :prefix "") :op))
           (sp-get encp (delete-char (+ :op-l :prefix-l))))
       (sp-message :point-not-deep-enough))))
 
