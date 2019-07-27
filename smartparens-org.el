@@ -58,14 +58,18 @@ This predicate is only tested on \"insert\" action."
   (when (eq action 'insert)
     (sp--looking-back-p (concat "\\[" (regexp-quote id)))))
 
+(defun sp-org-point-inside-latex-fragment-p (_id _action _context)
+  "Return t if point is inside latex-fragment, nil otherwise."
+  (org-inside-LaTeX-fragment-p))
+
 (sp-with-modes 'org-mode
   (sp-local-pair "*" "*"
-                 :unless '(sp-point-after-word-p sp-point-at-bol-p)
+                 :unless '(sp-point-after-word-p sp-point-at-bol-p sp-org-point-inside-latex-fragment-p)
                  :skip-match 'sp--org-skip-asterisk)
-  (sp-local-pair "_" "_" :unless '(sp-point-after-word-p))
+  (sp-local-pair "_" "_" :unless '(sp-point-after-word-p sp-org-point-inside-latex-fragment-p))
   (sp-local-pair "/" "/" :unless '(sp-point-after-word-p sp-org-point-after-left-square-bracket-p) :post-handlers '(("[d1]" "SPC")))
-  (sp-local-pair "~" "~" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-  (sp-local-pair "=" "=" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
+  (sp-local-pair "~" "~" :unless '(sp-point-after-word-p sp-org-point-inside-latex-fragment-p) :post-handlers '(("[d1]" "SPC")))
+  (sp-local-pair "=" "=" :unless '(sp-point-after-word-p sp-org-point-inside-latex-fragment-p) :post-handlers '(("[d1]" "SPC")))
   (sp-local-pair "«" "»"))
 
 (provide 'smartparens-org)
